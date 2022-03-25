@@ -24,8 +24,6 @@ public class KeywordEngine {
 	public  String Scenario_sheet_path = projectpath+"/src/main/resources/Scenarios/keywordDriven.xlsx";
 
 	public void startExecution(String sheetname) {
-		String locatorName=null;
-		String locatorValue= null;
 		
 		 try {
 			book = new XSSFWorkbook(Scenario_sheet_path);
@@ -39,14 +37,11 @@ public class KeywordEngine {
 		int k =0;
 		for(int i = 0 ; i<sheet.getLastRowNum();i++) {
 			try {
-				String locatorColValue=sheet.getRow(i+1).getCell(k+1).toString().trim(); // id=txtUsername
-				if(!locatorColValue.equalsIgnoreCase("NA")) {
-					locatorName=locatorColValue.split("=")[0].trim(); //id
-					locatorValue = locatorColValue.split("=")[1].trim(); //txtUsername
-				}
+				String locatorType=sheet.getRow(i+1).getCell(k+1).toString().trim();
+				String locatorValue = sheet.getRow(i+1).getCell(k+2).toString().trim();
 
-				String action= sheet.getRow(i+1).getCell(k+2).getStringCellValue().trim();
-				String value = sheet.getRow(i+1).getCell(k+3).getStringCellValue().trim();
+				String action= sheet.getRow(i+1).getCell(k+3).getStringCellValue().trim();
+				String value = sheet.getRow(i+1).getCell(k+4).getStringCellValue().trim();
 
 				switch(action) {
 				case "open browser":
@@ -76,7 +71,7 @@ public class KeywordEngine {
 					break;
 				}
 
-				switch(locatorName) {
+				switch(locatorType) {
 				case "id":
 					element =driver.findElement(By.id(locatorValue));
 					if(action.equalsIgnoreCase("sendkeys")) {
@@ -84,7 +79,7 @@ public class KeywordEngine {
 					}else if(action.equalsIgnoreCase("click")) {
 						element.click();
 					}
-					locatorName=null;
+					locatorType=null;
 					break;
 				default:
 					break;
